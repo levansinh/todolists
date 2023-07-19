@@ -2,28 +2,37 @@ import { TodoModel } from "../models/Todo.js";
 import md5 from "md5";
 export const todoController = {
   //GET TODO
-  getAllTodo: async (req, res) => {
+  getAllTodoById: async (req, res) => {
     try {
-      const todo = await TodoModel.find();
+      const todo = await TodoModel.find({ id_user: req.params.id_user });
       res.status(200).json(todo);
     } catch (error) {
       console.log(error);
     }
   },
-  getOneTodo: async (req, res) => {
+  getOneTodo: async (req, res) => {},
+  createTodo: async (req, res) => {
     try {
-      const todo = await TodoModel.findOne(req.body._id);
+      const newTodo = await TodoModel(req.body);
+      const todo = await newTodo.save();
+      res
+        .status(200)
+        .json({ todo: todo, message: "Created todo successfully" });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  updateByIdUser: async (req, res) => {
+    try {
+      const todo = await TodoModel.findOneAndUpdate(
+        { _id: req.params.id },
+        req.body
+      );
       res.status(200).json(todo);
     } catch (error) {
       console.log(error);
     }
   },
-  createTodo:async(req,res) => {
-      
-},
-  updateTodo:async(req,res) => {
-      
-},
   deleteTodo: async (req, res) => {
     TodoModel.findByIdAndRemove(req.params.id)
       .then((data) => {

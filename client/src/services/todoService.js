@@ -1,8 +1,8 @@
 import instance from "../configs/config";
 
-export const getAllTodo = ( navigate, accessToken) => {
+export const getAllTodo = ( id,navigate, accessToken) => {
     try {
-      const res = instance.get("/todo", {
+      const res = instance.get(`/todo/${id}`, {
         headers: { token: `Bearer ${accessToken}`},
       });
       return res

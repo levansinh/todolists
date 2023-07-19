@@ -1,14 +1,16 @@
-import mongoose from 'mongoose'
+import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
 const schema = new Schema(
-    {
-        title: { type: String ,required:"true"},
-        description:{type: String ,required:'true'},
-        complete: {type: String,default:false},
-        },
-        {timestamps:true}
+  {
+    task_name: { type: String, required: "true" },
+    description: { type: String, required: "true" },
+    id_user: { type: String, required: "true" },
+    completed: { type: Boolean, default: false },
+    important: { type: Boolean, default: false },
+  },
+  { timestamps: true }
 );
 
-export const TodoModel = mongoose.model('ToDo',schema)
+export const TodoModel = mongoose.model("ToDo", schema);

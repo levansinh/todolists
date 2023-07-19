@@ -4,7 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
-function TodoInput() {
+import * as todoService from "../services/todoService";
+import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+function TodoInput({ toDoList, setToDoList }) {
   const [formData, setFormData] = useState({
     task_name: "",
     description: "",
@@ -13,12 +16,22 @@ function TodoInput() {
 
   const user = useSelector((state) => state.auth.login.currentUser);
   const idUser = user.account._id;
+  const accessToken = user.accessToken;
+  const navigate = useNavigate();
 
-  const handleSubmid = (e) => {
+  const handleSubmid = async (e) => {
     e.preventDefault();
     if (formData.task_name === "" || formData.description === "")
       return toast.error("chua nhap đủa thông tin");
-    console.log({ ...formData, id_user: idUser, completed: false });
+    const res = await todoService.createTodo(
+      { ...formData, id_user: idUser },
+      navigate,
+      accessToken
+    );
+    if (res) {
+      toast.success("Add successfully");
+    }
+    setToDoList([...toDoList, formData]);
     setFormData({
       task_name: "",
       description: "",
@@ -70,5 +83,10 @@ function TodoInput() {
     </div>
   );
 }
+
+TodoInput.propTypes = {
+  toDoList: PropTypes.array,
+  setToDoList: PropTypes.func,
+};
 
 export default TodoInput;
